@@ -1,6 +1,7 @@
 Changes
 IP.xs
 example/city.pl
+example/netspeed.pl
 example/region.pl
 example/org.pl
 lib/Geo/IP.pm
