@@ -1,0 +1,17 @@
+This module uses the Berkeley database.  This database simply contains
+IP blocks as keys, and countries as values.  The data is obtained from
+the ARIN, RIPE, and APNIC whois servers.  This database should be more
+complete and accurate than reverse DNS lookups.
+
+This module can be used to automatically select the geographically closest mirror,
+or to target advertising by country, or to analyze your web server logs
+to determine the countries of your visiters.
+
+To find a country for an IP address, this module finds Networks
+that contain the IP address, starting with a netmask of 32, going up to
+3 until it finds a matching IP Block.
+
+Copyright (c) 2001, T.J. Mather, tjmather@tjmather.com
+
+All rights reserved.  This package is free software; you can redistribute it
+and/or modify it under the same terms as Perl itself.

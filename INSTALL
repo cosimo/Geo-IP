@@ -1,0 +1,11 @@
+To install, run
+
+perl Makefile.PL
+make
+make install
+
+To run the tests, first download Geo-IP-Perl_200106.db.gz from
+http://www.geo-ip.com/download/Geo-IP-Perl_200106.db.gz
+then run
+
+make test

@@ -1,0 +1,11 @@
+Revision history for Perl extension Geo::IP.
+
+0.02  July 11th 2001
+	- renamed to Geo::IP from Net::Geography
+	- revised docs
+	- data separated from perl distribution, can
+		be downloaded from http://geo-ip.com
+
+0.01  June 30th 2001
+	- original version; created by h2xs 1.19
+
