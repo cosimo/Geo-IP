@@ -6,10 +6,11 @@ use Carp;
 
 use DB_File;
 
-$VERSION = '0.02';
+$VERSION = '0.06';
 
 sub new {
   my ($class, $db_file) = @_;
+  $db_file ||= '/usr/local/geoip/Geo-IP.db';
   my %hash = ();
   tie %hash, 'DB_File', $db_file, O_RDONLY, 0666, $DB_BTREE
     or croak "Failed to open database file '$db_file': $!";
@@ -18,6 +19,23 @@ sub new {
 
 sub lookup_country {
   my ($ng, $ip_address) = @_;
+  my $iterator = $ng->_net_block_iterator($ip_address);
+  while(my $bin_block = $iterator->()){
+    next unless exists $ng->{db_hash}->{$bin_block};
+    return $ng->{db_hash}->{$bin_block};
+  }
+  return undef;
+}
+
+sub lookup_country_by_name {
+  my ($ng, $host) = @_;
+  my $ip_address;
+  if ($host =~ m!^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$!) {
+    $ip_address = $host;
+  } else {
+    $ip_address = join('.',unpack('C4',(gethostbyname($host))[4]));
+  }
+  return unless $ip_address;
   my $iterator = $ng->_net_block_iterator($ip_address);
   while(my $bin_block = $iterator->()){
     next unless exists $ng->{db_hash}->{$bin_block};
@@ -60,11 +78,12 @@ Geo::IP - Look up country by IP Address
 
   use Geo::IP;
 
-  my $gi = new Geo::IP('/path/to/db/Net-Geography-Perl_200106.db');
+  my $gi = Geo::IP->new('/usr/local/geoip/Geo-IP.db');
 
   # look up IP address '65.15.30.247'
   # returns undef if country is unallocated, or not defined in our database
   my $country = $gi->lookup_country('65.15.30.247');
+  $country = $gi->lookup_country_by_name('yahoo.com');
   # $country is equal to "US"
 
 =head1 DESCRIPTION
@@ -85,17 +104,14 @@ that contain the IP address, starting with a netmask of 32, going up to
 
 =head1 VERSION
 
-0.02
+0.06
 
-IP to country database available from http://www.geo-ip.com
-Up-to-date as of June 1st, 2001
-
-Updates to the database should come out monthly.  Look for updates
-at http://www.geo-ip.com
+IP to country database up-to-date as of February 1st, 2002
+Updates to the database will be available on the first week of each month.  
 
 =head1 AUTHOR
 
-Copyright (c) 2001, T.J. Mather, tjmather@tjmather.com
+Copyright (c) 2002, T.J. Mather, tjmather@tjmather.com, New York, NY, USA
 
 All rights reserved.  This package is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.

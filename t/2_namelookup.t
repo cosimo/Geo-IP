@@ -3,7 +3,7 @@ use Test;
 
 $^W = 1;
 
-BEGIN { plan tests => 11 }
+BEGIN { plan tests => 20 }
 
 use Geo::IP;
 
@@ -11,8 +11,8 @@ my $gi = new Geo::IP('Geo-IP.db');
 
 while (<DATA>) {
   chomp;
-  my ($ipaddr, $exp_country) = split("\t");
-  my $country = $gi->lookup_country($ipaddr);
+  my ($host, $exp_country) = split("\t");
+  my $country = $gi->lookup_country_by_name($host);
   ok($country, $exp_country);
 }
 
@@ -28,3 +28,12 @@ __DATA__
 194.244.83.2	IT
 203.15.106.23	AU
 196.31.1.1	ZA
+yahoo.com	US
+www.bundesregierung.de	DE
+www.thaigov.go.th	TH
+www.president.ir	IR
+www.moinfo.gov.kw	KW
+www.gov.ru	RU
+www.parliament.ge	GE
+www.cpv.org.vn	VN
+alfa.nic.in	IN

@@ -7,7 +7,7 @@ BEGIN { plan tests => 5 }
 
 use Geo::IP;
 
-my $gi = new Geo::IP('./Geo-IP_200106.db');
+my $gi = new Geo::IP('Geo-IP.db');
 
 my $iterator = $gi->_net_block_iterator('192.168.42.153');
 
