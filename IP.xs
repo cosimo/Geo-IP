@@ -161,24 +161,26 @@ city(gir)
 	RETVAL
 
 char *
-latitude(gir)
+postal_code(gir)
 	GeoIPRecord *gir
-    PREINIT:
-        float lat;
     CODE:
-	lat = gir->latitude;
-        asprintf(&RETVAL, "%.4f", lat);
+	RETVAL = gir->postal_code;
     OUTPUT:
 	RETVAL
 
-char *
-longitude(gir)
+float
+_latitude(gir)
 	GeoIPRecord *gir
-    PREINIT:
-        float lon;
     CODE:
-	lon = gir->longitude;
-        asprintf(&RETVAL, "%.4f", lon);
+	RETVAL = gir->latitude;
+    OUTPUT:
+	RETVAL
+
+float
+_longitude(gir)
+	GeoIPRecord *gir
+    CODE:
+	RETVAL = gir->longitude;
     OUTPUT:
 	RETVAL
 
