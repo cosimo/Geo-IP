@@ -17,7 +17,7 @@ MODULE = Geo::IP	PACKAGE = Geo::IP
 PROTOTYPES: DISABLE
 
 GeoIP *
-new(CLASS,flags)
+new(CLASS,flags = 0)
 	char * CLASS
 	int flags
     CODE:
@@ -26,7 +26,7 @@ new(CLASS,flags)
 	RETVAL
 
 GeoIP *
-open(CLASS,filename,flags)
+open(CLASS,filename,flags = 0)
 	char * CLASS
 	char * filename
 	int flags

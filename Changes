@@ -1,5 +1,10 @@
 Revision history for Perl extension Geo::IP.
 
+0.26  July 25th 2002
+      Geo::IP
+	- Made flags optional to new and open
+	- Removed www.moinfo.gov.kw from test, domain no longer resolves.
+
 0.20  June 25th 2002
       Geo::IP
 	- Brought up to date with latest changes for GeoIP C 0.2.0

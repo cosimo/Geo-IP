@@ -7,7 +7,7 @@ BEGIN { plan tests => 18 }
 
 use Geo::IP;
 
-my $gi = Geo::IP->new(GEOIP_STANDARD);
+my $gi = Geo::IP->new();
 
 while (<DATA>) {
   chomp;

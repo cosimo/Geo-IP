@@ -3,7 +3,7 @@ use Test;
 
 $^W = 1;
 
-BEGIN { plan tests => 19 }
+BEGIN { plan tests => 18 }
 
 use Geo::IP;
 
@@ -31,7 +31,6 @@ yahoo.com	US
 www.bundesregierung.de	DE
 www.thaigov.go.th	TH
 www.president.ir	IR
-www.moinfo.gov.kw	KW
 www.gov.ru	RU
 www.parliament.ge	GE
 www.cpv.org.vn	VN
