@@ -7,7 +7,7 @@ BEGIN { plan tests => 11 }
 
 use Geo::IP;
 
-my $gi = new Geo::IP('./Geo-IP-Perl_200106.db');
+my $gi = new Geo::IP('./Geo-IP_200106.db');
 
 my $country = $gi->lookup_country('203.174.65.12');
 ok($country eq "JP");

@@ -1,5 +1,11 @@
 Revision history for Perl extension Geo::IP.
 
+0.03  July 28th 2001
+	- Geo::IP now generates Berkeley DB file from
+		data file, to get around differing versions
+		of Berkeley DB.
+	- now croaks if db file can not be opened (Nick Craig-Wood)
+
 0.02  July 11th 2001
 	- renamed to Geo::IP from Net::Geography
 	- revised docs

@@ -2,6 +2,7 @@ package Geo::IP;
 
 use strict;
 use vars qw($VERSION);
+use Carp;
 
 use DB_File;
 
@@ -10,7 +11,8 @@ $VERSION = '0.02';
 sub new {
   my ($class, $db_file) = @_;
   my %hash = ();
-  tie %hash, 'DB_File', $db_file, O_CREAT|O_RDWR, 0666, $DB_BTREE;
+  tie %hash, 'DB_File', $db_file, O_RDONLY, 0666, $DB_BTREE
+    or croak "Failed to open database file '$db_file': $!";
   bless {db_hash => \%hash}, $class;
 }
 
