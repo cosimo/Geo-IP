@@ -8,14 +8,15 @@ require DynaLoader;
 require Exporter;
 @ISA = qw(DynaLoader Exporter);
 
-$VERSION = '1.15';
+$VERSION = '1.21';
 
 bootstrap Geo::IP $VERSION;
 
 sub GEOIP_STANDARD(){0;}
 sub GEOIP_MEMORY_CACHE(){1;}
+sub GEOIP_CHECK_CACHE(){2;}
 
-@EXPORT = qw( GEOIP_STANDARD GEOIP_MEMORY_CACHE );
+@EXPORT = qw( GEOIP_STANDARD GEOIP_MEMORY_CACHE GEOIP_CHECK_CACHE );
 
 1;
 __END__
@@ -59,7 +60,9 @@ well as many paid databases. It uses ARIN, RIPE, APNIC, and LACNIC whois to
 obtain the IP->Country mappings.
 
 If you require greater accuracy, MaxMind offers a Premium database on a paid 
-subscription basis. 
+subscription basis.  Also included with this is a service that updates your
+database automatically each month, by running a program called geoipupdate
+included with the C API from a cronjob.
 
 =head1 CLASS METHODS
 
@@ -71,7 +74,8 @@ Constructs a new Geo::IP object with the default database located inside your sy
 I<datadir>, typically I</usr/local/share/GeoIP/GeoIP.dat>.
 
 Flags can be set to either GEOIP_STANDARD, or for faster performance
-(at a cost of using more memory), GEOIP_MEMORY_CACHE.
+(at a cost of using more memory), GEOIP_MEMORY_CACHE.  When using memory
+cache you can force a reload if the file is updated by setting GEOIP_CHECK_CACHE.
 
 =item $gi = Geo::IP->open( $database_filename, $flags );
 
@@ -124,7 +128,7 @@ http://sourceforge.net/projects/geoip/
 
 =head1 VERSION
 
-1.15
+1.21
 
 =head1 SEE ALSO
 
@@ -132,7 +136,7 @@ Geo::IP::Record
 
 =head1 AUTHOR
 
-Copyright (c) 2002, MaxMind.com
+Copyright (c) 2003, MaxMind LLC
 
 All rights reserved.  This package is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.
