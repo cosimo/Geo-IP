@@ -17,19 +17,21 @@ MODULE = Geo::IP	PACKAGE = Geo::IP
 PROTOTYPES: DISABLE
 
 GeoIP *
-new(CLASS)
+new(CLASS,flags)
 	char * CLASS
+	int flags
     CODE:
-	RETVAL = GeoIP_new();
+	RETVAL = GeoIP_new(flags);
     OUTPUT:
 	RETVAL
 
 GeoIP *
-open(CLASS,filename)
+open(CLASS,filename,flags)
 	char * CLASS
 	char * filename
+	int flags
     CODE:
-	RETVAL = GeoIP_open(filename);
+	RETVAL = GeoIP_open(filename,flags);
     OUTPUT:
 	RETVAL
 
@@ -48,6 +50,24 @@ country_code_by_name(gi, name)
 	char * name
     CODE:
 	RETVAL = (char *)GeoIP_country_code_by_name(gi,name);
+    OUTPUT:
+	RETVAL
+
+char *
+country_code3_by_addr(gi, addr)
+	GeoIP *gi
+	char * addr
+    CODE:
+	RETVAL = (char *)GeoIP_country_code3_by_addr(gi,addr);
+    OUTPUT:
+	RETVAL
+
+char *
+country_code3_by_name(gi, name)
+	GeoIP *gi
+	char * name
+    CODE:
+	RETVAL = (char *)GeoIP_country_code3_by_name(gi,name);
     OUTPUT:
 	RETVAL
 

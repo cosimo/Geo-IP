@@ -1,15 +1,20 @@
 package Geo::IP;
 
 use strict;
-use vars qw(@ISA $VERSION);
+use vars qw(@ISA $VERSION @EXPORT);
 
 require DynaLoader;
+require Exporter;
+@ISA = qw(DynaLoader Exporter);
 
-@ISA = qw(DynaLoader);
-
-$VERSION = '0.11';
+$VERSION = '0.20';
 
 bootstrap Geo::IP $VERSION;
+
+sub GEOIP_STANDARD(){0;}
+sub GEOIP_MEMORY_CACHE(){1;}
+
+@EXPORT = qw( GEOIP_STANDARD GEOIP_MEMORY_CACHE );
 
 1;
 __END__
@@ -22,7 +27,7 @@ Geo::IP - Look up country by IP Address
 
   use Geo::IP;
 
-  my $gi = Geo::IP->new();
+  my $gi = Geo::IP->new(GEOIP_STANDARD);
 
   # look up IP address '65.15.30.247'
   # returns undef if country is unallocated, or not defined in our database
@@ -33,8 +38,8 @@ Geo::IP - Look up country by IP Address
 =head1 DESCRIPTION
 
 This module uses a file based database.  This database simply contains
-IP blocks as keys, and countries as values.  The data is obtained from
-the ARIN, RIPE, and APNIC whois servers.  This database should be more
+IP blocks as keys, and countries as values. 
+This database should be more
 complete and accurate than reverse DNS lookups.
 
 This module can be used to automatically select the geographically closest mirror,
@@ -50,12 +55,15 @@ assigned to.
 
 =over 4
 
-=item $gi = Geo::IP->new();
+=item $gi = Geo::IP->new( $flags );
 
 Constructs a new Geo::IP object with the default database located inside your system's
 I<datadir>, typically I</usr/local/share/GeoIP/GeoIP.dat>.
 
-=item $gi = Geo::IP->open( $database_filename );
+Flags can be set to either GEOIP_STANDARD, or for faster performance
+(at a cost of using more memory), GEOIP_MEMORY_CACHE.
+
+=item $gi = Geo::IP->open( $database_filename, $flags );
 
 Constructs a new Geo::IP object with the database located at C<$database_filename>.
 
@@ -73,6 +81,14 @@ Returns the ISO 3166 country code for an IP address.
 
 Returns the ISO 3166 country code for a hostname.
 
+=item $code = $gi->country_code3_by_addr( $ipaddr );
+
+Returns the 3 letter country code for an IP address.
+
+=item $code = $gi->country_code3_by_name( $ipname );
+
+Returns the 3 letter country code for a hostname.
+
 =item $name = $gi->country_name_by_addr( $ipaddr );
 
 Returns the full country name for an IP address.
@@ -85,11 +101,11 @@ Returns the full country name for a hostname.
 
 =head1 VERSION
 
-0.10
+0.20
 
 =head1 AUTHOR
 
-Copyright (c) 2002, T.J. Mather, tjmather@tjmather.com, New York, NY, USA
+Copyright (c) 2002, MaxMind.com
 
 All rights reserved.  This package is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.

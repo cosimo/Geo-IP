@@ -67,9 +67,9 @@ sub find_mirror_by_addr {
 
   unless($self->{gi}) {
     if ($self->{database_file}) {
-      $self->{gi} = Geo::IP->open($self->{database_file});
+      $self->{gi} = Geo::IP->open($self->{database_file}, GEOIP_STANDARD);
     } else {
-      $self->{gi} = Geo::IP->new();
+      $self->{gi} = Geo::IP->new(GEOIP_STANDARD);
     }
   }
 

@@ -3,11 +3,11 @@ use Test;
 
 $^W = 1;
 
-BEGIN { plan tests => 20 }
+BEGIN { plan tests => 19 }
 
 use Geo::IP;
 
-my $gi = new Geo::IP;
+my $gi = Geo::IP->new(GEOIP_MEMORY_CACHE);
 
 while (<DATA>) {
   chomp;
@@ -20,7 +20,6 @@ __DATA__
 203.174.65.12	JP
 212.208.74.140	FR
 200.219.192.106	BR
-65.15.30.247	US
 134.102.101.18	DE
 193.75.148.28	BE
 134.102.101.18	DE
