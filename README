@@ -4,17 +4,9 @@ public IP addresses and should be more
 complete and accurate than reverse DNS lookups.
 
 This module can be used to automatically select the geographically closest mirror,
-or to target advertising by country, or to analyze your web server logs
-to determine the countries of your visiters.
+or to analyze your web server logs to determine the countries of your visiters.
 
 To install, see the INSTALL file.
-
-To find a country for an IP address, this module uses the database
-contained in /usr/local/geoip/Geo-IP.dat to find a Network
-that contains the IP address.
-
-The database will be updated at the beginning of each month.  To update,
-follow the instructions in the INSTALL file.
 
 Copyright (c) 2002, T.J. Mather, tjmather@tjmather.com
 

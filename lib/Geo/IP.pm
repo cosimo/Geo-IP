@@ -7,7 +7,7 @@ require DynaLoader;
 
 @ISA = qw(DynaLoader);
 
-$VERSION = '0.08';
+$VERSION = '0.09';
 
 bootstrap Geo::IP $VERSION;
 
@@ -38,7 +38,7 @@ the ARIN, RIPE, and APNIC whois servers.  This database should be more
 complete and accurate than reverse DNS lookups.
 
 This module can be used to automatically select the geographically closest mirror,
-or to target advertising by country, to analyze your web server logs
+to analyze your web server logs
 to determine the countries of your visiters, for credit card fraud
 detection, and for software export controls.
 
@@ -85,7 +85,7 @@ Returns the full country name for a hostname.
 
 =head1 VERSION
 
-0.08
+0.09
 
 =head1 AUTHOR
 

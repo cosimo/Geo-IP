@@ -1,5 +1,10 @@
 Revision history for Perl extension Geo::IP.
 
+0.09  April 8th 2002
+      Geo::Mirror
+	- Fixed bug when no database file specified.
+	- Fixed bug in t/3_mirror.t test script
+
 0.08  April 7th 2002
       Geo::IP
 	- This perl module is now a XS wrapper around the GeoIP C library

@@ -6,7 +6,7 @@ use Geo::IP;
 
 use POSIX;
 
-$VERSION = '0.06';
+$VERSION = '0.09';
 
 use constant PI => 3.1415;
 
@@ -69,7 +69,7 @@ sub find_mirror_by_addr {
     if ($self->{database_file}) {
       $self->{gi} = Geo::IP->open($self->{database_file});
     } else {
-      $self->{gi} = Geo::IP->new($self->{database_file});
+      $self->{gi} = Geo::IP->new();
     }
   }
 
