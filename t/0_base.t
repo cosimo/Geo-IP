@@ -1,3 +1,5 @@
+# -*- Mode: Perl; -*-
+
 BEGIN {
         print "1..1\n";
 }

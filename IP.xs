@@ -7,6 +7,7 @@ extern "C" {
 #include "XSUB.h"
 
 #include "GeoIP.h"
+#include "GeoIPCity.h"
 
 #ifdef __cplusplus
 }
@@ -89,8 +90,100 @@ country_name_by_name(gi, name)
     OUTPUT:
 	RETVAL
 
+GeoIPRecord *
+record_by_addr(gi, addr)
+	GeoIP *gi
+	char * addr
+    PREINIT:
+	char * CLASS = "Geo::IP::Record";
+    CODE:
+	RETVAL = GeoIP_record_by_addr(gi,addr);
+    OUTPUT:
+	RETVAL
+
+GeoIPRecord *
+record_by_name(gi, addr)
+	GeoIP *gi
+	char * addr
+    PREINIT:
+	char * CLASS = "Geo::IP::Record";
+    CODE:
+	RETVAL = GeoIP_record_by_name(gi,addr);
+    OUTPUT:
+	RETVAL
+
 void
 DESTROY(gi)
 	GeoIP *gi
     CODE:
 	GeoIP_delete(gi);
+
+MODULE = Geo::IP        PACKAGE = Geo::IP::Record
+
+char *
+country_code(gir)
+	GeoIPRecord *gir
+    CODE:
+	RETVAL = gir->country_code;
+    OUTPUT:
+	RETVAL
+
+char *
+country_code3(gir)
+	GeoIPRecord *gir
+    CODE:
+	RETVAL = gir->country_code3;
+    OUTPUT:
+	RETVAL
+
+char *
+country_name(gir)
+	GeoIPRecord *gir
+    CODE:
+	RETVAL = gir->country_name;
+    OUTPUT:
+	RETVAL
+
+char *
+region(gir)
+	GeoIPRecord *gir
+    CODE:
+	RETVAL = gir->region;
+    OUTPUT:
+	RETVAL
+
+char *
+city(gir)
+	GeoIPRecord *gir
+    CODE:
+	RETVAL = gir->city;
+    OUTPUT:
+	RETVAL
+
+char *
+latitude(gir)
+	GeoIPRecord *gir
+    PREINIT:
+        float lat;
+    CODE:
+	lat = gir->latitude;
+        asprintf(&RETVAL, "%.4f", lat);
+    OUTPUT:
+	RETVAL
+
+char *
+longitude(gir)
+	GeoIPRecord *gir
+    PREINIT:
+        float lon;
+    CODE:
+	lon = gir->longitude;
+        asprintf(&RETVAL, "%.4f", lon);
+    OUTPUT:
+	RETVAL
+
+void
+DESTROY(gir)
+	GeoIPRecord *gir
+    CODE:
+	GeoIPRecord_delete(gir);

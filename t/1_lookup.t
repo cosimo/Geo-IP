@@ -1,3 +1,5 @@
+# -*- Mode: Perl; -*-
+
 use strict;
 use Test;
 
