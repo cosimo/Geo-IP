@@ -1,7 +1,7 @@
 Changes
+IP.xs
 lib/Geo/IP.pm
 lib/Geo/Mirror.pm
-geoip-lookup
 Makefile.PL
 MANIFEST
 README

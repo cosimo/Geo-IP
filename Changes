@@ -1,5 +1,12 @@
 Revision history for Perl extension Geo::IP.
 
+0.08  April 7th 2002
+      Geo::IP
+	- This perl module is now a XS wrapper around the GeoIP C library
+	  for improved performance.  Note that the API has changed.
+	- Removed the geoip-lookup script, since GeoIP C contains a
+	  geoiplookup executable that provides the same functionality
+
 0.07  April 1st 2002
       Geo::IP
 	- Removed dependency on Berkeley DB - requires new

@@ -12,7 +12,7 @@ my $gi = new Geo::IP;
 while (<DATA>) {
   chomp;
   my ($host, $exp_country) = split("\t");
-  my $country = $gi->lookup_country_by_name($host);
+  my $country = $gi->country_code_by_name($host);
   ok($country, $exp_country);
 }
 

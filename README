@@ -16,8 +16,6 @@ that contains the IP address.
 The database will be updated at the beginning of each month.  To update,
 follow the instructions in the INSTALL file.
 
-Ideally we would have a script to run updates.  Patches welcome!
-
 Copyright (c) 2002, T.J. Mather, tjmather@tjmather.com
 
 All rights reserved.  This package is free software; you can redistribute it

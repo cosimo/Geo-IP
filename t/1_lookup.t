@@ -7,12 +7,12 @@ BEGIN { plan tests => 19 }
 
 use Geo::IP;
 
-my $gi = Geo::IP->new('/usr/local/geoip/Geo-IP.dat');
+my $gi = Geo::IP->new();
 
 while (<DATA>) {
   chomp;
   my ($ipaddr, $exp_country) = split("\t");
-  my $country = $gi->lookup_country($ipaddr);
+  my $country = $gi->country_code_by_addr($ipaddr);
   ok(uc($country), $exp_country);
 }
 

@@ -65,10 +65,16 @@ sub find_mirror_by_country {
 sub find_mirror_by_addr {
   my ($self, $addr) = @_;
 
-  $self->{gi} ||= Geo::IP->new($self->{database_file});
+  unless($self->{gi}) {
+    if ($self->{database_file}) {
+      $self->{gi} = Geo::IP->open($self->{database_file});
+    } else {
+      $self->{gi} = Geo::IP->new($self->{database_file});
+    }
+  }
 
   # default to US if country not found
-  my $country = lc($self->{gi}->lookup_country($addr)) || 'us';
+  my $country = lc($self->{gi}->country_code_by_addr($addr)) || 'us';
   $country = 'us' if $country eq '--';
   return $self->find_mirror_by_country($country);
 }

@@ -1,11 +1,7 @@
-To install or upgrade the database, run
+To install the GeoIP C library, goto
+  http://geo-ip.com/download
 
-  lwp-download http://geo-ip.com/download/Geo-IP.dat
-  mv Geo-IP.dat /usr/local/geoip/Geo-IP.dat
-
-The database will be updated on the 1st day of every month.
-
-To install run
+To install the Perl XS wrapper, run
 
   perl Makefile.PL
   make
