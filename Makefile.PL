@@ -1,33 +1,20 @@
 use ExtUtils::MakeMaker;
 use Config;
+use Cwd;
 
-$expat_libpath = '';
-$expat_incpath = '';
+$geoip_libpath = '';
+$geoip_incpath = '';
 
 my @replacement_args;
 
-foreach (@ARGV) {
-  if (/^GEOIP(LIB|INC)PATH=(.+)/) {
-    if ($1 eq 'LIB') {
-      $geoip_libpath = $2;
-    }
-    else {
-      $geoip_incpath = $2;
-    }
-  }
-  else {
-    push(@replacement_args, $_);
-  }
+my %config;
+
+while($_ = shift) {
+    my ($key, $val) = split(/=/, $_, 2);
+    $config{$key} = $val;
 }
 
-@ARGV = @replacement_args;
-
-if (not $geoip_libpath and $] >= 5.006001) {
-  require ExtUtils::Liblist;		# Buggy before this
-  ($geoip_libpath) = ExtUtils::Liblist->ext('-lGeoIP');
-}
-
-unless ($geoip_libpath) {
+unless ($config{LIBS}) {
   # Test for existence of libGeoIP
   my $found = 0;
   foreach (split(/\s+/, $Config{libpth})) {
@@ -43,18 +30,12 @@ unless ($geoip_libpath) {
 GeoIP must be installed prior to building Geo::IP and I can't find
 it in the standard library directories. You can download GeoIP from:
 
-http://geo-ip.com/download/
+http://maxmind.com/geoip/api/c.shtml
 
-If expat is installed, but in a non-standard directory, then use the
+If GeoIP is installed, but in a non-standard directory, then use the
 following options to Makefile.PL:
 
-    GEOIPLIBPATH=...  To set the directory in which to find libGeoIP
-
-    GEOIPINCPATH=...  To set the directory in which to find GeoIP.h
-
-For example:
-
-    perl Makefile.PL GEOIPLIBPATH=/home/me/lib GEOIPINCPATH=/home/me/include
+    perl Makefile.PL LIBS='-L/home/me/lib' INC='-I/home/me/include'
 
 Note that if you build against a shareable library in a non-standard location
 you may (on some platforms) also have to set your LD_LIBRARY_PATH environment
@@ -62,6 +43,10 @@ variable at run time for perl to find the library.
 
 GeoIP_Not_Installed;
   }
+}
+
+if ($config{LIBS} !~ /\-lGeoIP\b/) {
+    $config{LIBS} .= ' -lGeoIP';
 }
 
 @extras = ();
@@ -81,6 +66,6 @@ WriteMakefile(
               dist      => {COMPRESS => 'gzip', SUFFIX => '.gz'},
               VERSION_FROM => 'lib/Geo/IP.pm',
               LIBS      => ['-lGeoIP'],
-	      @extras
+              @extras,
+	      %config
              );
-
