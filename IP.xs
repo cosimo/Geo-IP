@@ -70,8 +70,7 @@ country_name_by_name(gi, name)
 	RETVAL
 
 void
-DESTORY(gi)
+DESTROY(gi)
 	GeoIP *gi
     CODE:
 	GeoIP_delete(gi);
-

@@ -7,7 +7,7 @@ require DynaLoader;
 
 @ISA = qw(DynaLoader);
 
-$VERSION = '0.09';
+$VERSION = '0.10';
 
 bootstrap Geo::IP $VERSION;
 
@@ -85,7 +85,7 @@ Returns the full country name for a hostname.
 
 =head1 VERSION
 
-0.09
+0.10
 
 =head1 AUTHOR
 

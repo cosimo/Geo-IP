@@ -1,5 +1,11 @@
 Revision history for Perl extension Geo::IP.
 
+0.10  April 21st 2002
+      Geo::IP
+	- Fixed DESTROY (Brian Grossman)
+      Geo::Mirror
+	- Set PI to more accurate value (Mike Mitchell)
+
 0.09  April 8th 2002
       Geo::Mirror
 	- Fixed bug when no database file specified.

@@ -1,5 +1,5 @@
 To install the GeoIP C library, goto
-  http://geo-ip.com/download
+  http://maxmind.com/geoip/api/c.shtml
 
 To install the Perl XS wrapper, run
 

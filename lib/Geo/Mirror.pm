@@ -6,9 +6,9 @@ use Geo::IP;
 
 use POSIX;
 
-$VERSION = '0.09';
+$VERSION = '0.10';
 
-use constant PI => 3.1415;
+use constant PI => 3.14159265358979323846;
 
 our (%lat, %lon);
 
