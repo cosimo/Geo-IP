@@ -2,15 +2,23 @@ package Geo::Mirror;
 
 use strict;
 use vars qw($VERSION);
-use Geo::IP;
 
-use POSIX;
-
-$VERSION = '0.10';
+$VERSION = '1.0';
 
 use constant PI => 3.14159265358979323846;
 
-our (%lat, %lon);
+our (%lat, %lon, $geo_ip_pkg);
+
+BEGIN {
+  if (eval { require Geo::IP }) {
+    $geo_ip_pkg = "Geo::IP";
+  }
+  else {
+    require Geo::IP::PurePerl;
+    $geo_ip_pkg = "Geo::IP::PurePerl";
+  }
+  $geo_ip_pkg->import('GEOIP_STANDARD');
+}
 
 while (<DATA>) {
   my ($country, $lat, $lon) = split(':');
@@ -32,68 +40,67 @@ sub _init {
   my $mirror_file = $self->{mirror_file};
   open MIRROR, "$mirror_file";
   while(<MIRROR>) {
-    my ($url, $country) = split(' ');
+    my ($url, $country, $fresh) = split(' ');
     push @{$self->{mirror}->{$country}}, $url;
+    $self->{fresh}{$url} = $fresh || 0;
   }
   close MIRROR;
 }
 
 sub _random_mirror {
-  my ($self, $country) = @_;
+  my ($self, $country, $fresh) = @_;
 
-  my $num = scalar(@{$self->{mirror}->{$country}});
+  my @mirror = grep { $self->{fresh}{$_} >= $fresh } @{$self->{mirror}->{$country}};
 
-  return unless $num;
+  my $num = scalar @mirror or return;
 
-  return $self->{mirror}->{$country}->[int(rand()*$num)];
+  return $mirror[ rand($num) ];
 }
 
 sub find_mirror_by_country {
-  my ($self, $country) = @_;
+  my ($self, $country, $fresh) = @_;
+  my $url;
+
+  $fresh ||= 0;
 
   if (exists $self->{mirror}->{$country}) {
-    return $self->_random_mirror($country);
-  } elsif (exists $self->{nearby_cache}->{$country}) {
-    return $self->_random_mirror($self->{nearby_cache}->{$country});
-  } else {
-    my $new_country = $self->_find_nearby_country($country);
-    $self->{nearby_cache}->{$country} = $new_country;
-    return $self->_random_mirror($new_country);
+    $url = $self->_random_mirror($country, $fresh);
   }
+
+  if (!$url) {
+    my $nearby = $self->{nearby_cache}->{$country} ||= $self->_find_nearby_countries($country);
+    foreach my $new_country (@$nearby) {
+      $url = $self->_random_mirror($new_country, $fresh) and last;
+    }
+  }
+
+  return $url;
 }
 
 sub find_mirror_by_addr {
-  my ($self, $addr) = @_;
+  my ($self, $addr, $fresh) = @_;
 
   unless($self->{gi}) {
     if ($self->{database_file}) {
-      $self->{gi} = Geo::IP->open($self->{database_file}, GEOIP_STANDARD);
+      $self->{gi} = $geo_ip_pkg->open($self->{database_file}, GEOIP_STANDARD);
     } else {
-      $self->{gi} = Geo::IP->new(GEOIP_STANDARD);
+      $self->{gi} = $geo_ip_pkg->new(GEOIP_STANDARD);
     }
   }
 
   # default to US if country not found
   my $country = lc($self->{gi}->country_code_by_addr($addr)) || 'us';
   $country = 'us' if $country eq '--';
-  return $self->find_mirror_by_country($country);
+  return $self->find_mirror_by_country($country, $fresh);
 }
 
-sub _find_nearby_country {
+sub _find_nearby_countries {
   my ($self, $country) = @_;
 
-  my @candidate_countries = keys %{$self->{mirror}};
-  my $closest_country;
-  my $closest_distance = 1_000_000_000;
+  my %distance = map { ($_, $self->_calculate_distance($country, $_)) } keys %{$self->{mirror}};
+  delete $distance{$country};
 
-  for (@candidate_countries) {
-    my $distance = $self->_calculate_distance($country, $_);
-    if ($distance < $closest_distance) {
-      $closest_country = $_;
-      $closest_distance = $distance;
-    }
-  }
-  return $closest_country;
+  [ sort { $distance{$a} <=> $distance{$b} } keys %distance ];
 }
 
 sub _calculate_distance {
@@ -131,8 +138,8 @@ Geo::Mirror - Find closest Mirror
 
   my $gm = Geo::Mirror->new(mirror_file => '/path/to/mirrors.txt');
 
-  my $mirror = $gm->closest_mirror_by_country('us');
-  my $mirror = $gm->closest_mirror_by_addr('65.15.30.247');
+  my $mirror = $gm->closest_mirror_by_country('us', $freshness);       # $freshness optional, see description below
+  my $mirror = $gm->closest_mirror_by_addr('24.24.24.24', $freshness); # $freshness optional, see description below
 
 =head1 DESCRIPTION
 
@@ -141,9 +148,13 @@ to identify the country that the IP address originated from.  If
 the country is not represented in the mirror list, then it finds the
 closest country using a latitude/longitude table.
 
+The mirror file should be a space separate list of URL, Country, and mirror freshness.
+The mirror freshness is optional and can be used by user
+request a mirror with a minimum freshness.
+
 =head1 AUTHOR
 
-Copyright (c) 2002, T.J. Mather, tjmather@tjmather.com, New York, NY, USA
+Copyright (c) 2004, MaxMind LLC, support@maxmind.com
 
 All rights reserved.  This package is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.

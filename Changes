@@ -1,4 +1,13 @@
 Revision history for Perl extension Geo::IP.
+1.23  October 6th 2004
+	- Updated test case, removed www.bundesregierung.de
+	- Geo::Mirror: fallback to using Geo::IP::PurePerl if Geo::IP is not available
+		(Graham Barr)
+	- Geo::Mirror: added support for mirror freshness
+
+1.22  July 29th 2004
+	- Added support for Netspeed
+	- Fixed IP address in examples
 
 1.21  July 28th 2003
 	- Added support for GEOIP_CHECK_CACHE

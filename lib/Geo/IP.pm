@@ -8,7 +8,7 @@ require DynaLoader;
 require Exporter;
 @ISA = qw(DynaLoader Exporter);
 
-$VERSION = '1.21';
+$VERSION = '1.23';
 
 bootstrap Geo::IP $VERSION;
 
@@ -16,7 +16,13 @@ sub GEOIP_STANDARD(){0;}
 sub GEOIP_MEMORY_CACHE(){1;}
 sub GEOIP_CHECK_CACHE(){2;}
 
-@EXPORT = qw( GEOIP_STANDARD GEOIP_MEMORY_CACHE GEOIP_CHECK_CACHE );
+sub GEOIP_UNKNOWN_SPEED(){0;}
+sub GEOIP_DIALUP_SPEED(){1;}
+sub GEOIP_CABLEDSL_SPEED(){2;}
+sub GEOIP_CORPORATE_SPEED(){3;}
+
+@EXPORT = qw( GEOIP_STANDARD GEOIP_MEMORY_CACHE GEOIP_CHECK_CACHE
+	GEOIP_UNKNOWN_SPEED GEOIP_DIALUP_SPEED GEOIP_CABLEDSL_SPEED GEOIP_CORPORATE_SPEED );
 
 1;
 __END__
@@ -31,9 +37,9 @@ Geo::IP - Look up country by IP Address
 
   my $gi = Geo::IP->new(GEOIP_STANDARD);
 
-  # look up IP address '65.15.30.247'
+  # look up IP address '24.24.24.24'
   # returns undef if country is unallocated, or not defined in our database
-  my $country = $gi->country_code_by_addr('65.15.30.247');
+  my $country = $gi->country_code_by_addr('24.24.24.24');
   $country = $gi->country_code_by_name('yahoo.com');
   # $country is equal to "US"
 
@@ -91,7 +97,7 @@ Constructs a new Geo::IP object with the database located at C<$database_filenam
 
 Returns the ISO 3166 country code for an IP address.
 
-=item $code = $gi->country_code_by_name( $ipname );
+=item $code = $gi->country_code_by_name( $hostname );
 
 Returns the ISO 3166 country code for a hostname.
 
@@ -99,7 +105,7 @@ Returns the ISO 3166 country code for a hostname.
 
 Returns the 3 letter country code for an IP address.
 
-=item $code = $gi->country_code3_by_name( $ipname );
+=item $code = $gi->country_code3_by_name( $hostname );
 
 Returns the 3 letter country code for a hostname.
 
@@ -107,17 +113,25 @@ Returns the 3 letter country code for a hostname.
 
 Returns the full country name for an IP address.
 
-=item $name = $gi->country_name_by_name( $ipname );
+=item $name = $gi->country_name_by_name( $hostname );
 
 Returns the full country name for a hostname.
 
-=item $name = $gi->record_by_addr( $ipaddr );
+=item $r = $gi->record_by_addr( $ipaddr );
 
 Returns a Geo::IP::Record object containing city location for an IP address.
 
-=item $name = $gi->record_by_name( $ipname );
+=item $r = $gi->record_by_name( $hostname );
 
 Returns a Geo::IP::Record object containing city location for a hostname.
+
+=item $org = $gi->org_by_addr( $ipaddr );
+
+Returns the Organization or ISP name for an IP address.
+
+=item $org = $gi->org_by_name( $hostname );
+
+Returns the Organization or ISP name for an IP address.
 
 =back
 
@@ -128,7 +142,7 @@ http://sourceforge.net/projects/geoip/
 
 =head1 VERSION
 
-1.21
+1.23
 
 =head1 SEE ALSO
 
@@ -136,7 +150,7 @@ Geo::IP::Record
 
 =head1 AUTHOR
 
-Copyright (c) 2003, MaxMind LLC
+Copyright (c) 2004, MaxMind LLC
 
 All rights reserved.  This package is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.
