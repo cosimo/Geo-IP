@@ -8,6 +8,5 @@ README
 t/0_base.t
 t/1_lookup.t
 t/2_namelookup.t
-t/3_net_block_iterator.t
-t/4_mirror.t
+t/3_mirror.t
 t/cpan_mirror.txt

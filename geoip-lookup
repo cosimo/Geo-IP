@@ -15,7 +15,7 @@ geoip-lookup - lookup country for IP address or hostname
 
 The I<geoip-lookup> program will return the country for the IP address or
 hostname given as the first command line argument.
-It queries uses the database in C</usr/local/geoip/Geo-IP.db>.
+It queries uses the database in C</usr/local/geoip/Geo-IP.dat>.
 
 By default it prints the ISO 3166 country code.  Use the C<-l> option
 to print the country name.
@@ -49,7 +49,7 @@ my $addr = shift || usage();
 
 my $gi = new Geo::IP;
 
-my $code = lc($gi->lookup_country($addr));
+my $code = lc($gi->lookup_country_by_name($addr));
 
 if ($opts{l}) {
   eval { require Locale::Country; }

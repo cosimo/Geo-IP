@@ -1,4 +1,4 @@
-This module uses the Berkeley database.  This database simply contains
+This module a simple file-based database.  This database simply contains
 IP blocks as keys, and countries as values.  The data contains all
 public IP addresses and should be more
 complete and accurate than reverse DNS lookups.
@@ -7,19 +7,14 @@ This module can be used to automatically select the geographically closest mirro
 or to target advertising by country, or to analyze your web server logs
 to determine the countries of your visiters.
 
-To install, run:
+To install, see the INSTALL file.
 
-  perl Makefile.PL
-  make
-  make test
-  make install
-
-To find a country for an IP address, this module finds Networks
-that contain the IP address, starting with a netmask of 32, going up to
-3 until it finds a matching IP Block.
+To find a country for an IP address, this module uses the database
+contained in /usr/local/geoip/Geo-IP.dat to find a Network
+that contains the IP address.
 
 The database will be updated at the beginning of each month.  To update,
-you have to remove Geo-IP.db, and re-run the installation process.
+follow the instructions in the INSTALL file.
 
 Ideally we would have a script to run updates.  Patches welcome!
 

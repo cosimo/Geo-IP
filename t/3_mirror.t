@@ -8,7 +8,7 @@ BEGIN { plan tests => 3 }
 use Geo::Mirror;
 
 my $gm = Geo::Mirror->new(mirror_file => 't/cpan_mirror.txt',
-			database_file => 'Geo-IP.db');
+			database_file => '/usr/local/geoip/Geo-IP.dat');
 
 # pakistan closest to India
 ok($gm->find_mirror_by_country('pk'), 'http://cpan.in.freeos.com');
