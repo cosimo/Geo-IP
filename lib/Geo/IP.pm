@@ -7,7 +7,7 @@ require DynaLoader;
 require Exporter;
 @ISA = qw(DynaLoader Exporter);
 
-$VERSION = '1.10';
+$VERSION = '1.11';
 
 bootstrap Geo::IP $VERSION;
 
@@ -123,7 +123,7 @@ http://sourceforge.net/projects/geoip/
 
 =head1 VERSION
 
-1.10
+1.11
 
 =head1 SEE ALSO
 
