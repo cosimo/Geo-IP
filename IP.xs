@@ -65,10 +65,8 @@ id_by_name(gi, name)
 	RETVAL
 
 char *
-GeoIP_database_info (gi)
+database_info (gi)
 	GeoIP *gi
-    PREINIT:
-	int i = 0;  
     CODE:
 	RETVAL = GeoIP_database_info(gi);
     OUTPUT:
@@ -235,6 +233,14 @@ region(gir)
 	GeoIPRecord *gir
     CODE:
 	RETVAL = (const char *)gir->region;
+    OUTPUT:
+	RETVAL
+
+const char *
+region_name(gir)
+	GeoIPRecord *gir
+    CODE:
+	RETVAL = (const char *) GeoIP_region_name_by_code(gir->country_code, gir->region);
     OUTPUT:
 	RETVAL
 
