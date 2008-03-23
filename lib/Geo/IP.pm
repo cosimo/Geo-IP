@@ -7,7 +7,7 @@ use vars qw($VERSION @EXPORT  $TESTING_PERL_ONLY @ISA $XS_VERSION);
 BEGIN { $TESTING_PERL_ONLY = 0;}
 
 BEGIN {       
-	$VERSION = '1.30';
+	$VERSION = '1.31';
   eval {
 
     # PERL_DL_NONLAZY must be false, or any errors in loading will just
@@ -134,7 +134,7 @@ my @countries = (
  UM US UY UZ VA VC VE VG 
  VI VN VU WF WS YE YT RS 
  ZA ZM ME ZW A1 A2 AX GG 
- IM JE /
+ IM JE BL MF/
 );
 my @code3s = ( undef, qw/
                    AP  EU  AND ARE AFG ATG AIA
@@ -168,7 +168,7 @@ my @code3s = ( undef, qw/
                UM  USA URY UZB VAT VCT VEN VGB
                VIR VNM VUT WLF WSM YEM YT  SRB
                ZAF ZMB MNE ZWE A1  A2  ALA GGY
-               IMN JEY                          /
+               IMN JEY BLM MAF                 /
 );
 my @names = (
               undef,
@@ -420,7 +420,9 @@ my @names = (
               "Aland Islands",
               "Guernsey",
               "Isle of Man",
-              "Jersey"
+              "Jersey",
+	      "Saint Barthelemy",
+	      "Saint Martin"
 );
 
 sub open {
@@ -458,15 +460,21 @@ sub new {
 
   # this will be less messy once deprecated new( $path, [$flags] )
   # is no longer supported (that's what open() is for)
+  my $def_db_file = '/usr/local/share/GeoIP/GeoIP.dat';
+  if ($^O eq 'NetWare') {
+    $def_db_file = 'sys:/etc/GeoIP/GeoIP.dat';
+  } elsif ($^O eq 'MSWin32') {
+    $def_db_file = 'c:/GeoIP/GeoIP.dat';
+  }
   if ( !defined $db_file ) {
 
     # called as new()
-    $db_file = '/usr/local/share/GeoIP/GeoIP.dat';
+    $db_file = $def_db_file;
   }
   elsif ( $db_file =~ /^\d+$/	) {
     # called as new( $flags )
     $flags   = $db_file;
-    $db_file = '/usr/local/share/GeoIP/GeoIP.dat';
+    $db_file = $def_db_file;
   }    # else called as new( $database_filename, [$flags] );
 
   $class->open( $db_file, $flags );
@@ -980,7 +988,7 @@ __END__
 
 =head1 NAME
 
-Geo::IP - Look up country by IP Address
+Geo::IP - Look up location and network information by IP Address
 
 =head1 SYNOPSIS
 
@@ -1003,7 +1011,7 @@ complete and accurate than reverse DNS lookups.
 
 This module can be used to automatically select the geographically closest mirror,
 to analyze your web server logs
-to determine the countries of your visiters, for credit card fraud
+to determine the countries of your visitors, for credit card fraud
 detection, and for software export controls.
 
 =head1 IP ADDRESS TO COUNTRY DATABASES
@@ -1100,11 +1108,11 @@ Returns a Geo::IP::Record object containing city location for a hostname.
 
 =item $org = $gi->org_by_addr( $ipaddr );
 
-Returns the Organization or ISP name for an IP address.
+Returns the Organization, ISP name or Domain Name for an IP address.
 
 =item $org = $gi->org_by_name( $hostname );
 
-Returns the Organization or ISP name for a hostname.
+Returns the Organization, ISP name or Domain Name for a hostname.
 
 =item $info = $gi->database_info;
 
@@ -1135,7 +1143,7 @@ http://lists.sourceforge.net/lists/listinfo/geoip-perl
 
 =head1 VERSION
 
-1.28
+1.31
 
 =head1 SEE ALSO
 
@@ -1143,7 +1151,7 @@ Geo::IP::Record
 
 =head1 AUTHOR
 
-Copyright (c) 2007, MaxMind LLC
+Copyright (c) 2008, MaxMind, Inc
 
 All rights reserved.  This package is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.
