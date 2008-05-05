@@ -25,7 +25,7 @@ unless ($config{LIBS}) {
   }
 
   unless ($found) {
-    die <<'GeoIP_Not_Installed;';
+    print STDERR <<'GeoIP_Not_Installed;';
 
 The GeoIP CAPI is not installed you should do that. Otherwise try 
 
@@ -53,6 +53,7 @@ then you may need to add /usr/local/lib to /etc/ld.so.conf then run
 /sbin/ldconfig /etc/ld.so.conf
 
 GeoIP_Not_Installed;
+  exit 0; # make cpantesters happy
   }
 }
 
