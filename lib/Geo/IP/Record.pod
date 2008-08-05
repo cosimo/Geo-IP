@@ -21,7 +21,8 @@
 	$record->longitude,
 	$record->time_zone,
 	$record->dma_code,
-	$record->area_code;
+	$record->area_code,
+    $record->continent_code;
 
 =head1 DESCRIPTION
 
@@ -81,13 +82,18 @@ Returns the DMA code from the location object (for city-level US locations only)
 
 Returns the area code from the location object (for city-level US locations only)
 
+=item $continent_code = $record->continent_code;
+
+ Returns the continent code from the location object.
+ Possible continent codes are AF, AS, EU, NA, OC, SA for Africa, Asia, Europe, North America, Oceania  and South America. 
+
 =head1 VERSION
 
 1.20
 
 =head1 AUTHOR
 
-Copyright (c) 2006, MaxMind LLC
+Copyright (c) 2008, MaxMind LLC
 
 All rights reserved.  This package is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.

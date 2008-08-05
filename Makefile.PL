@@ -1,6 +1,7 @@
 use ExtUtils::MakeMaker;
 use Config;
 use Cwd;
+use 5.006;
 
 $geoip_libpath = '';
 $geoip_incpath = '';
