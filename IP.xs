@@ -145,6 +145,26 @@ org_by_name(gi, name)
 	RETVAL
 
 void
+range_by_ip(gi, addr)
+	GeoIP *gi
+	const char * addr
+    PREINIT:
+    char ** r;
+    PPCODE:
+	r = GeoIP_range_by_ip(gi,addr);
+        if (r != NULL){
+		EXTEND(SP,2);
+		PUSHs( sv_2mortal( newSVpv(r[0], 0) ) );
+		PUSHs( sv_2mortal( newSVpv(r[1], 0) ) );
+
+		if ( r[0] )
+			free(r[0]);
+		if ( r[1] )
+			free(r[1]);
+		free(r);
+        }
+
+void
 region_by_addr(gi, addr)
 	GeoIP *gi
 	char * addr
@@ -321,6 +341,15 @@ dma_code(gir)
 	GeoIPRecord *gir
     CODE:
 	RETVAL = gir->dma_code;
+	
+    OUTPUT:
+	RETVAL
+
+int
+metro_code(gir)
+	GeoIPRecord *gir
+    CODE:
+       RETVAL = gir->dma_code; /* we can NOT use metro_code here. metro_code may be not present in older CAPI's */
     OUTPUT:
 	RETVAL
 
