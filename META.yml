@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Geo-IP
-version:            1.36
+version:            1.37
 abstract:           ~
 author:  []
 license:            unknown
