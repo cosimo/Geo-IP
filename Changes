@@ -1,4 +1,13 @@
 Revision history for Perl extension Geo::IP.
+1.38 May 16th 2009
+        - PurePerl region_by_addr and region_by_name return '00' for unknown regions, like the CAPI does ( Boris Zentner )
+        - Update to latest FIPS codes from 20090401 ( Boris Zentner )
+        - Fix Pureperl handling of GEOIP_REGION_EDITION_REV0 ( Boris Zentner )
+        - Fix segfault when undef is supplied as filename to open ( Boris Zentner )
+        - Fix PP GEOIP_ISP_EDITION handling ( Boris Zentner )
+        - Add PP support for GEOIP_DOMAIN_EDITION ( Boris Zentner )
+        - Handle database types in the same way, as the CAPI does ( Boris Zentner )
+        - Remove Australia double timezones entries. ( Boris Zentner ) 
 1.37 March 6th 2009
         - Document region_by_addr and region_by_name ( Boris Zentner )
         - region_by_addr and region_by_name return undef for unknown countries and regions. Instead of "\0" and '000' ( Boris Zentner )

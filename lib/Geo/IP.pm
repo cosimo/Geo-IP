@@ -7,7 +7,7 @@ use vars qw($VERSION @EXPORT  $GEOIP_PP_ONLY @ISA $XS_VERSION);
 BEGIN { $GEOIP_PP_ONLY = 0 unless defined($GEOIP_PP_ONLY); }
 
 BEGIN {
-  $VERSION = '1.37';
+  $VERSION = '1.38';
   eval {
 
     # PERL_DL_NONLAZY must be false, or any errors in loading will just
@@ -38,13 +38,13 @@ BEGIN {
   #my $pp = !( defined &_XScompiled && &_XScompiled && !$TESTING_PERL_ONLY );
   my $pp = !defined &open;
 
-  sub GEOIP_COUNTRY_EDITION()     { $pp ? 106 : 1; }
-  sub GEOIP_REGION_EDITION_REV0() { $pp ? 112 : 7; }
-  sub GEOIP_CITY_EDITION_REV0()   { $pp ? 111 : 6; }
-  sub GEOIP_ORG_EDITION()         { $pp ? 110 : 5; }
-  sub GEOIP_ISP_EDITION()         { $pp ? 109 : 4; }
+  sub GEOIP_COUNTRY_EDITION()     { 1; }
   sub GEOIP_CITY_EDITION_REV1()   { 2; }
   sub GEOIP_REGION_EDITION_REV1() { 3; }
+  sub GEOIP_ISP_EDITION()         { 4; }
+  sub GEOIP_ORG_EDITION()         { 5; }
+  sub GEOIP_CITY_EDITION_REV0()   { 6; }
+  sub GEOIP_REGION_EDITION_REV0() { 7; }
   sub GEOIP_PROXY_EDITION()       { 8; }
   sub GEOIP_ASNUM_EDITION()       { 9; }
   sub GEOIP_NETSPEED_EDITION()    { 10; }
@@ -100,15 +100,6 @@ use constant GEOIP_STATE_BEGIN_REV0    => 16700000;
 use constant GEOIP_STATE_BEGIN_REV1    => 16000000;
 use constant STRUCTURE_INFO_MAX_SIZE   => 20;
 use constant DATABASE_INFO_MAX_SIZE    => 100;
-
-#use constant GEOIP_COUNTRY_EDITION     => 106;
-#use constant GEOIP_REGION_EDITION_REV0 => 112;
-#use constant GEOIP_REGION_EDITION_REV1 => 3;
-#use constant GEOIP_CITY_EDITION_REV0   => 111;
-#use constant GEOIP_CITY_EDITION_REV1   => 2;
-#use constant GEOIP_ORG_EDITION         => 110;
-#use constant GEOIP_ISP_EDITION         => 109;
-#use constant GEOIP_NETSPEED_EDITION    => 10;
 
 use constant SEGMENT_RECORD_LENGTH     => 3;
 use constant STANDARD_RECORD_LENGTH    => 3;
@@ -476,7 +467,7 @@ my @names = (
 );
 
 ## created with:
-# perl -Ilib -e 'use MM::GeoIP::Reloaded::Country_Region_Names q{%country_region_names}; use Data::Dumper; print Dumper(\%country_region_names)' >/tmp/crn.pl
+# perl -Ilib -e 'use MM::GeoIP::Reloaded::Country_Region_Names q{%country_region_names}; use Data::Dumper; $Data::Dumper::Sortkeys++; print Dumper(\%country_region_names)' >/tmp/crn.pl
 #
 my %country_region_names = (
   'AD' => {
@@ -585,7 +576,7 @@ my %country_region_names = (
             '09' => 'Huila',
             '10' => 'Luanda',
             '12' => 'Malanje',
-						'13' => 'Namibe',
+            '13' => 'Namibe',
             '14' => 'Moxico',
             '15' => 'Uige',
             '16' => 'Zaire',
@@ -940,8 +931,18 @@ my %country_region_names = (
             '04' => 'Mono',
             '05' => 'Oueme',
             '06' => 'Zou',
+            '07' => 'Alibori',
+            '08' => 'Atakora',
+            '09' => 'Atlanyique',
             '10' => 'Borgou',
-            '14' => 'Littoral'
+            '11' => 'Collines',
+            '12' => 'Kouffo',
+            '13' => 'Donga',
+            '14' => 'Littoral',
+            '15' => 'Mono',
+            '16' => 'Oueme',
+            '17' => 'Plateau',
+            '18' => 'Zou'
   },
   'BM' => {
             '01' => 'Devonshire',
@@ -2838,9 +2839,15 @@ my %country_region_names = (
             '09' => 'Nimba',
             '10' => 'Sino',
             '11' => 'Grand Bassa',
+            '12' => 'Grand Cape Mount',
+            '13' => 'Maryland',
             '14' => 'Montserrado',
+            '17' => 'Margibi',
+            '18' => 'River Cess',
             '19' => 'Grand Gedeh',
-            '20' => 'Lofa'
+            '20' => 'Lofa',
+            '21' => 'Gbarpolu',
+            '22' => 'River Gee'
   },
   'LS' => {
             '10' => 'Berea',
@@ -4139,7 +4146,7 @@ my %country_region_names = (
             '33' => 'Darfur',
             '34' => 'Kurdufan',
             '35' => 'Upper Nile',
-						'40' => 'Al Wahadah State',
+            '40' => 'Al Wahadah State',
             '44' => 'Central Equatoria State'
   },
   'SE' => {
@@ -4537,7 +4544,9 @@ my %country_region_names = (
             '75' => 'Ubon Ratchathani',
             '76' => 'Udon Thani',
             '77' => 'Amnat Charoen',
-            '78' => 'Mukdahan'
+            '78' => 'Mukdahan',
+            '79' => 'Nong Bua Lamphu',
+            '80' => 'Sa Kaeo'
   },
   'TJ' => {
             '01' => 'Kuhistoni Badakhshon',
@@ -4552,32 +4561,29 @@ my %country_region_names = (
             '05' => 'Mary'
   },
   'TN' => {
-            '02' => 'Al Qasrayn',
-            '03' => 'Al Qayrawan',
-            '06' => 'Jundubah',
-            '10' => 'Qafsah',
-            '14' => 'Kef',
-            '15' => 'Al Mahdiyah',
+            '02' => 'Kasserine',
+            '03' => 'Kairouan',
+            '06' => 'Jendouba',
+            '14' => 'El Kef',
+            '15' => 'Al Mahdia',
             '16' => 'Al Munastir',
             '17' => 'Bajah',
-            '18' => 'Banzart',
-            '19' => 'Nabul',
-            '22' => 'Silyanah',
-            '23' => 'Susah',
-            '26' => 'Chaiyaphum Province',
-            '27' => 'Bin',
+            '18' => 'Bizerte',
+            '19' => 'Nabeul',
+            '22' => 'Siliana',
+            '23' => 'Sousse',
+            '26' => 'Ariana',
+            '27' => 'Ben Arous',
             '28' => 'Madanin',
-            '29' => 'Qabis',
-            '30' => 'Qafsah',
-            '31' => 'Qibili',
-            '32' => 'Safaqis',
-            '33' => 'Sidi Bu Zayd',
-            '34' => 'Tatawin',
-            '35' => 'Tawzar',
+            '29' => 'Gabes',
+            '30' => 'Gafsa',
+            '31' => 'Kebili',
+            '32' => 'Sfax',
+            '33' => 'Sidi Bou Zid',
+            '34' => 'Tataouine',
+            '35' => 'Tozeur',
             '36' => 'Tunis',
-            '37' => 'Zaghwan',
-            '38' => 'Ariana',
-            '39' => 'Manouba'
+            '37' => 'Zaghouan'
   },
   'TO' => {
             '01' => 'Ha',
@@ -5095,7 +5101,7 @@ my %country_region_names = (
             '08' => 'Masvingo',
             '09' => 'Bulawayo',
             '10' => 'Harare'
-    }
+  }
 );
 
 sub _get_region_name {
@@ -5127,6 +5133,9 @@ sub open_type {
     GEOIP_DOMAIN_EDITION()      => 'GeoIPDomain',
   );
 
+  # backward compatibility for 2003 databases.
+  $type -= 105 if $type >= 106;
+  
   my $name = $type_dat_name_mapper{$type};
   die("Invalid database type $type\n") unless $name;
 
@@ -5227,7 +5236,11 @@ sub _setup_segments {
       read( $gi->{fh}, $a, 1 );
 
       #read the databasetype
-      $gi->{"databaseType"} = ord($a);
+      my $database_type = ord($a);
+
+      # backward compatibility for 2003 databases.
+      $database_type -= 105 if $database_type >= 106;
+      $gi->{"databaseType"} = $database_type;
 
 #chose the database segment for the database type
 #if database Type is GEOIP_REGION_EDITION then use database segment GEOIP_STATE_BEGIN
@@ -5243,6 +5256,7 @@ sub _setup_segments {
       elsif (    ( $gi->{"databaseType"} == GEOIP_CITY_EDITION_REV0 )
               || ( $gi->{"databaseType"} == GEOIP_CITY_EDITION_REV1 )
               || ( $gi->{"databaseType"} == GEOIP_ORG_EDITION )
+              || ( $gi->{"databaseType"} == GEOIP_DOMAIN_EDITION )
               || ( $gi->{"databaseType"} == GEOIP_ISP_EDITION ) ) {
         $gi->{"databaseSegments"} = 0;
 
@@ -5255,7 +5269,9 @@ sub _setup_segments {
 
 #record length is four for ISP databases and ORG databases
 #record length is three for country databases, region database and city databases
-        if ( $gi->{"databaseType"} == GEOIP_ORG_EDITION ) {
+        if (    $gi->{"databaseType"} == GEOIP_ORG_EDITION 
+             || $gi->{"databaseType"} == GEOIP_ISP_EDITION
+             || $gi->{"databaseType"} == GEOIP_DOMAIN_EDITION ){
           $gi->{"record_length"} = ORG_RECORD_LENGTH;
         }
       }
@@ -5594,7 +5610,7 @@ sub region_by_name {
   if ( $gi->{"databaseType"} == GEOIP_REGION_EDITION_REV0 ) {
     my $seek_region =
       $gi->_seek_country( addr_to_num($ip_address) ) - GEOIP_STATE_BEGIN_REV0;
-    if ( $seek_region < 1000 ) {
+    if ( $seek_region >= 1000 ) {
       return (
                "US",
                chr( ( $seek_region - 1000 ) / 26 + 65 )
@@ -5639,7 +5655,7 @@ sub region_by_name {
 ##          chr( ( $a2 / 100 ) + 48 )
 ##        . chr( ( ( $a2 / 10 ) % 10 ) + 48 )
 ##        . chr( ( $a2 % 10 ) + 48 );
-      return ( $c, $a2 ? sprintf('%03d', $a2 ) : undef ) ;
+      return ( $c, $a2 ? sprintf('%03d', $a2 ) : '00' ) ;
     }
   }
 }
@@ -5943,7 +5959,7 @@ http://lists.sourceforge.net/lists/listinfo/geoip-perl
 
 =head1 VERSION
 
-1.37
+1.38
 
 =head1 SEE ALSO
 
