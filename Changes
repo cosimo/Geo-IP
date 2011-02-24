@@ -1,4 +1,7 @@
 Revision history for Perl extension Geo::IP.
+1.38_01 Feb 24th 2011 [UNOFFICIAL]
+        - Added minimal IPv6 support waiting for 1.39 release on CPAN ( Cosimo Streppone )
+
 1.38 May 16th 2009
         - PurePerl region_by_addr and region_by_name return '00' for unknown regions, like the CAPI does ( Boris Zentner )
         - Update to latest FIPS codes from 20090401 ( Boris Zentner )

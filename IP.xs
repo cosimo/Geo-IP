@@ -56,6 +56,15 @@ id_by_addr(gi, addr)
 	RETVAL
 
 int
+id_by_addr_v6(gi, addr)
+	GeoIP *gi
+	char * addr
+    CODE:
+	RETVAL = GeoIP_id_by_addr_v6(gi,addr);
+    OUTPUT:
+	RETVAL
+
+int
 id_by_name(gi, name)
 	GeoIP *gi
 	char * name
@@ -78,6 +87,15 @@ country_code_by_addr(gi, addr)
 	char * addr
     CODE:
 	RETVAL = GeoIP_country_code_by_addr(gi,addr);
+    OUTPUT:
+	RETVAL
+
+const char *
+country_code_by_addr_v6(gi, addr)
+	GeoIP *gi
+	char * addr
+    CODE:
+	RETVAL = GeoIP_country_code_by_addr_v6(gi,addr);
     OUTPUT:
 	RETVAL
 

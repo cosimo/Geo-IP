@@ -7,7 +7,7 @@ use vars qw($VERSION @EXPORT  $GEOIP_PP_ONLY @ISA $XS_VERSION);
 BEGIN { $GEOIP_PP_ONLY = 0 unless defined($GEOIP_PP_ONLY); }
 
 BEGIN {
-  $VERSION = '1.38';
+  $VERSION = '1.38_01';
   eval {
 
     # PERL_DL_NONLAZY must be false, or any errors in loading will just
@@ -38,17 +38,24 @@ BEGIN {
   #my $pp = !( defined &_XScompiled && &_XScompiled && !$TESTING_PERL_ONLY );
   my $pp = !defined &open;
 
-  sub GEOIP_COUNTRY_EDITION()     { 1; }
-  sub GEOIP_CITY_EDITION_REV1()   { 2; }
-  sub GEOIP_REGION_EDITION_REV1() { 3; }
-  sub GEOIP_ISP_EDITION()         { 4; }
-  sub GEOIP_ORG_EDITION()         { 5; }
-  sub GEOIP_CITY_EDITION_REV0()   { 6; }
-  sub GEOIP_REGION_EDITION_REV0() { 7; }
-  sub GEOIP_PROXY_EDITION()       { 8; }
-  sub GEOIP_ASNUM_EDITION()       { 9; }
-  sub GEOIP_NETSPEED_EDITION()    { 10; }
-  sub GEOIP_DOMAIN_EDITION()      { 11; }
+  sub GEOIP_COUNTRY_EDITION()            { 1; }
+  sub GEOIP_CITY_EDITION_REV1()          { 2; }
+  sub GEOIP_REGION_EDITION_REV1()        { 3; }
+  sub GEOIP_ISP_EDITION()                { 4; }
+  sub GEOIP_ORG_EDITION()                { 5; }
+  sub GEOIP_CITY_EDITION_REV0()          { 6; }
+  sub GEOIP_REGION_EDITION_REV0()        { 7; }
+  sub GEOIP_PROXY_EDITION()              { 8; }
+  sub GEOIP_ASNUM_EDITION()              { 9; }
+  sub GEOIP_NETSPEED_EDITION()           { 10; }
+  sub GEOIP_DOMAIN_EDITION()             { 11; }
+  sub GEOIP_COUNTRY_EDITION_V6()         { 12; }
+  sub GEOIP_LOCATIONA_EDITION()          { 13; }
+  sub GEOIP_ACCURACYRADIUS_EDITION()     { 14; }
+  sub GEOIP_CITYCONFIDENCE_EDITION()     { 15; }
+  sub GEOIP_CITYCONFIDENCEDIST_EDITION() { 16; }
+  sub GEOIP_LARGE_COUNTRY_EDITION()      { 17; }
+  sub GEOIP_LARGE_COUNTRY_EDITION_V6()   { 18; }
 
   sub GEOIP_CHARSET_ISO_8859_1() { 0; }
   sub GEOIP_CHARSET_UTF8()       { 1; }
@@ -5131,6 +5138,7 @@ sub open_type {
     GEOIP_ASNUM_EDITION()       => 'GeoIPASNum',
     GEOIP_NETSPEED_EDITION()    => 'GeoIPNetSpeed',
     GEOIP_DOMAIN_EDITION()      => 'GeoIPDomain',
+    GEOIP_COUNTRY_V6_EDITION()  => 'GeoIPv6',
   );
 
   # backward compatibility for 2003 databases.
@@ -5284,6 +5292,7 @@ sub _setup_segments {
 
 #if database Type is GEOIP_COUNTY_EDITION then use database segment GEOIP_COUNTRY_BEGIN
   if (    $gi->{"databaseType"} == GEOIP_COUNTRY_EDITION
+       || $gi->{"databaseType"} == GEOIP_COUNTRY_EDITION_V6
        || $gi->{"databaseType"} == GEOIP_NETSPEED_EDITION ) {
     $gi->{"databaseSegments"} = GEOIP_COUNTRY_BEGIN;
   }
@@ -5351,6 +5360,14 @@ sub country_code_by_addr {
   my ( $gi, $ip_address ) = @_;
   return unless $ip_address =~ m!^(?:\d{1,3}\.){3}\d{1,3}$!;
   return $countries[ $gi->id_by_addr($ip_address) ];
+}
+
+#this function returns the country code of ipv6 address
+sub country_code_by_addr_v6 {
+  my ( $gi, $ip_address ) = @_;
+  return unless $ip_address =~ m!^(?:[a-fA-f\d]{0,4}\:){1,8}$!;
+  return $countries[ $gi->country_code_by_addr_v6($ip_address) ];
+  #return $countries[ $gi->id_by_addr_v6($ip_address) ];
 }
 
 #this function returns the country code3 of ip address
@@ -5767,17 +5784,20 @@ __PP_CODE__
 print STDERR $@ if $@;
 
 @EXPORT = qw(
-  GEOIP_STANDARD              GEOIP_MEMORY_CACHE
-  GEOIP_CHECK_CACHE           GEOIP_INDEX_CACHE
-  GEOIP_UNKNOWN_SPEED         GEOIP_DIALUP_SPEED
-  GEOIP_CABLEDSL_SPEED        GEOIP_CORPORATE_SPEED
-  GEOIP_COUNTRY_EDITION       GEOIP_REGION_EDITION_REV0
-  GEOIP_CITY_EDITION_REV0     GEOIP_ORG_EDITION
-  GEOIP_ISP_EDITION           GEOIP_CITY_EDITION_REV1
-  GEOIP_REGION_EDITION_REV1   GEOIP_PROXY_EDITION
-  GEOIP_ASNUM_EDITION         GEOIP_NETSPEED_EDITION
-  GEOIP_CHARSET_ISO_8859_1    GEOIP_CHARSET_UTF8
-  GEOIP_MMAP_CACHE
+  GEOIP_STANDARD                   GEOIP_MEMORY_CACHE
+  GEOIP_CHECK_CACHE                GEOIP_INDEX_CACHE
+  GEOIP_UNKNOWN_SPEED              GEOIP_DIALUP_SPEED
+  GEOIP_CABLEDSL_SPEED             GEOIP_CORPORATE_SPEED
+  GEOIP_COUNTRY_EDITION            GEOIP_REGION_EDITION_REV0
+  GEOIP_CITY_EDITION_REV0          GEOIP_ORG_EDITION
+  GEOIP_ISP_EDITION                GEOIP_CITY_EDITION_REV1
+  GEOIP_REGION_EDITION_REV1        GEOIP_PROXY_EDITION
+  GEOIP_ASNUM_EDITION              GEOIP_NETSPEED_EDITION
+  GEOIP_COUNTRY_EDITION_V6         GEOIP_LOCATIONA_EDITION
+  GEOIP_ACCURACYRADIUS_EDITION     GEOIP_CITYCONFIDENCE_EDITION
+  GEOIP_CITYCONFIDENCEDIST_EDITION GEOIP_LARGE_COUNTRY_EDITION
+  GEOIP_LARGE_COUNTRY_EDITION_V6   GEOIP_CHARSET_ISO_8859_1
+  GEOIP_CHARSET_UTF8               GEOIP_MMAP_CACHE
 );
 
 1;
@@ -5959,7 +5979,9 @@ http://lists.sourceforge.net/lists/listinfo/geoip-perl
 
 =head1 VERSION
 
-1.38
+1.38_01 w/ minimal IPv6 support
+
+https://github.com/cosimo/Geo-IP/
 
 =head1 SEE ALSO
 
